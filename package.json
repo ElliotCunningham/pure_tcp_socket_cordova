@@ -1,0 +1,35 @@
+{
+  "name": "pure_tcp_socket_cordova",
+  "version": "0.0.1",
+  "description": "Cordova for Evy jdc Plugin",
+  "cordova": {
+    "id": "fr.elliot.tcpsocket",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "scket",
+    "tcp",
+    "objective c",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElliotCunningham/pure_tcp_socket_cordova.git"
+  },
+  "author": "Elliot Cunningham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ElliotCunningham/pure_tcp_socket_cordova/issues"
+  },
+  "homepage": "https://github.com/ElliotCunningham/pure_tcp_socket_cordova#readme",
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova-ios": ">=4.4.0"
+      }
+    }
+  }
+}
