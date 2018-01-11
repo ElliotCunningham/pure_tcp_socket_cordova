@@ -15,12 +15,12 @@
         @try {
             [_SharedSocketApi createConnexionWithAdress:adress AndPort:port];
             dispatch_async(dispatch_get_main_queue(), ^{
-                // do something in principale thread;
+                [_SharedJsContextApi sendResponse:@"connected OK"];
             });
         } @catch(NSException *error) {
             NSLog(@"error async background connect %@", error.debugDescription);
             dispatch_async(dispatch_get_main_queue(), ^{
-               // do something !!!!
+                [_SharedJsContextApi sendError:error.debugDescription];
             });
         }
     });
@@ -31,12 +31,12 @@
         @try {
             [_SharedSocketApi closeAndDeleteConnexion:adress];
             dispatch_async(dispatch_get_main_queue(), ^{
-                // do something in main thread;
+                [_SharedJsContextApi sendResponse:@"close connection and remove OK"];
             });
         } @catch(NSException *error) {
             NSLog(@"error async background disconnect %@", error.debugDescription);
             dispatch_async(dispatch_get_main_queue(), ^{
-                // do something !!!!
+                [_SharedJsContextApi sendError:error.debugDescription];
             });
         }
     });
@@ -47,12 +47,12 @@
         @try {
             [_SharedSocketApi sendData:data ToAConnexion:adress];
             dispatch_async(dispatch_get_main_queue(), ^{
-                // do something in principale thread;
+                [_SharedJsContextApi sendResponse:@"send ok"];
             });
         } @catch(NSException *error) {
             NSLog(@"error async background send data %@", error.debugDescription);
             dispatch_async(dispatch_get_main_queue(), ^{
-               // do something !!!!
+                [_SharedJsContextApi sendError:error.debugDescription];
             });
         }
     });
@@ -65,12 +65,12 @@
             NSString *response = [_SharedSocketApi getResponse:resLength FromConnexion:adress];
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSLog(@"response from %@ : %@", adress, response);
-               // do something in main thread with response.
+                [_SharedJsContextApi sendResponse:response];
             });
         } @catch(NSException *error) {
             NSLog(@"error async background get data response %@", error.debugDescription);
             dispatch_async(dispatch_get_main_queue(), ^{
-               //do something !!!!
+                [_SharedJsContextApi sendError:error.debugDescription];
             });
         }
     });
@@ -81,8 +81,9 @@
     self = [super init];
     if (self != nil) {
         self.SharedSocketApi = SocketApi.sharedSocketApi;
+        self.SharedJsContextApi = JsContextApi.sharedJsContextApi;
     }
-    
+
     return self;
 }
 

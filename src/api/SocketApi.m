@@ -12,12 +12,14 @@
 
 -(void)createConnexionWithAdress:(NSString *)adress AndPort:(NSString *)port {
     FastSocket *connexion = [[FastSocket alloc] initWithHost:adress andPort:port];
-    [connexion connect];
+    long timeout = 2.000;
+    [connexion connect:timeout];
     [self addConnexionToConnexionArray:connexion];
 }
 
 -(void)connectAConnexion:(FastSocket *)connexion {
-    [connexion connect];
+    long timeout = 2.000;
+    [connexion connect:timeout];
     if (connexion.lastError != nil) {
         NSException *error = [NSException exceptionWithName:@"connect" reason:connexion.lastError.debugDescription userInfo:nil];
         @throw(error);
@@ -35,12 +37,12 @@
     if ([connexion isConnected] == NO) {
         [self connectAConnexion:connexion];
     }
-    
+
     NSData *dataForSend = [self encodeToHexFromStringHex:data];
-    
+
     long sending = [connexion sendBytes:[dataForSend bytes] count:[dataForSend length]];
     NSLog(@"sending %ld data", sending);
-    
+
     if (connexion.lastError != nil) {
         NSException *error = [NSException exceptionWithName:@"error send data" reason:connexion.lastError.debugDescription userInfo:nil];
         @throw(error);
@@ -49,27 +51,27 @@
 
 -(NSString *)getResponse:(NSInteger *)resLength FromConnexion:(NSString *)adress {
     FastSocket *connexion = [self getConnexionInConnexionArray:adress];
-    
+
     if ([connexion isConnected] == NO) {
         NSException *error = [NSException exceptionWithName:@"get response" reason:@"connexion is not connected unable to get response" userInfo:nil];
         @throw(error);
     }
-    
+
     long length = (long)(int) resLength;
     char bytes[length];
-    
+
     float timeout = 60000;
     [connexion setTimeout:timeout];
     [connexion receiveBytes:bytes limit:length];
-    
+
     if (connexion.lastError != nil) {
         NSException *error = [NSException exceptionWithName:@"get response" reason:connexion.lastError.debugDescription userInfo:nil];
         @throw(error);
     }
-    
+
     NSData *dataBytes = [NSData dataWithBytes:bytes length:length];
     NSString *response = [self decodeToStringHexFromDataBinary:dataBytes];
-    
+
     return response;
 }
 
@@ -110,16 +112,16 @@
 -(NSData *)encodeToHexFromStringHex:(NSString *)dataString {
     NSMutableData *dataBinary = [[NSMutableData alloc] init];
     unsigned char whole_byte;
-    
+
     char byte_chars[3] = {'\0', '\0', '\0'};
-    
+
     for (int i=0; i<([dataString length]/2); i++) {
         byte_chars[0] = [dataString characterAtIndex:i*2];
         byte_chars[1] = [dataString characterAtIndex:i*2+1];
         whole_byte = strtol(byte_chars, NULL, 16);
         [dataBinary appendBytes:&whole_byte length:1];
     }
-    
+
     return dataBinary;
 }
 

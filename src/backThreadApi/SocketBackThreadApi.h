@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "SocketApi.h"
+#import "JsContextApi.h"
 
 @interface SocketBackThreadApi : NSObject
 
 @property(nonatomic, strong) SocketApi *SharedSocketApi;
+@property(nonatomic, strong) JsContextApi *SharedJsContextApi;
 
 -(void)createConnexionWithAdress:(NSString *)adress AndPort:(NSString *)port;
 
